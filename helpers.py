@@ -86,27 +86,27 @@ def drop_from_list(list_obj,to_drop):
             new.append(val)
     return new
 # 
-# def plot_dist(event_list,event_dist,last_event):
-#     data = []
-#     for i in range(1000):
-#         e = pick_event(event_list,event_dist,last_event)
-#         x = event_list.index(e)
-#         data.append(x)
-#         
-#     print sum(data)/len(data)
-#     plt.hist(data, 5)
-#     plt.show()
-#     
-# 
-# import matplotlib.pyplot as plt
-# import numpy as np
-# 
-# def plot_gamma(a,b):
-#     data = []
-#     for i in range(1000):
-#         x = random.gammavariate(a,b)
-#         data.append(x)
-#         
-#     print sum(data)/len(data)
-#     plt.hist(data, 20)
-#     plt.show()
+def plot_dist(event_list,event_dist,last_event):
+    data = []
+    for i in range(1000):
+        e = pick_event(event_list,event_dist,last_event)
+        x = event_list.index(e)
+        data.append(x)
+        
+    print sum(data)/len(data)
+    plt.hist(data, 5)
+    plt.show()
+    
+
+import matplotlib.pyplot as plt
+import numpy as np
+
+def plot_gamma(a,b):
+    data = []
+    for i in range(1000):
+        x = random.gammavariate(a,b)
+        data.append(x)
+        
+    print sum(data)/len(data)
+    plt.hist(data, 20)
+    plt.show()

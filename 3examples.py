@@ -21,16 +21,16 @@ billing_headers = ['company_id','signed_date','contract_amount','contract_length
 billing_include = [0,2,3,4]
 
 ## User inputs
-start = datetime.datetime(2013,1,1,0,0,0,0)
-end = datetime.datetime(2014,1,1,0,0,0,0)
-monthly_growth = 1.1
+start = datetime.datetime(2013,6,1,0,0,0,0)
+end = datetime.datetime(2014,6,1,0,0,0,0)
+monthly_growth = 1.02
 weekend_signup_ratio = .3
 users = 10000
 
 ## Signup inputs
-signup_event_list = ['create_user','signup_enter_email','signup_confirm_email','signup_enter_info','signup_complete_signup']
-starting_flow = [.9,.7,.5,.7]
-ending_flow = [.9,.8,.7,.9]
+signup_event_list = ['create_user','complete_signup']
+starting_flow = [.9]
+ending_flow = [.95]
 step_time = 30
 weekend_signup_flow_ratio = .8
 
@@ -45,16 +45,16 @@ contract_range = [1000,100000]
 
 ## Login inputs
 start_user_dist = [.1,.3,.6]
-end_user_dist = [.15,.3,.55]
-starts_odds_of_returning = [.85,.5,.3]
-end_odds_of_returning = [.95,.6,.2]
-start_days_to_return = [.5,3,5]
-end_days_to_return = [.5,2,8]
+end_user_dist = [.1,.3,.6]
+starts_odds_of_returning = [.8,.5,.1]
+end_odds_of_returning = [.9,.7,.3]
+start_days_to_return = [1,7,15]
+end_days_to_return = [1,5,12]
 weekend_login_ratio = .3
 
-## Test inputs
-test_start_date = datetime.datetime(2013,1,1,0,0,0,0)
-test_end_date = datetime.datetime(2013,2,1,0,0,0,0)
+# Test inputs
+test_start_date = datetime.datetime(2014,4,1,0,0,0,0)
+test_end_date = datetime.datetime(2014,5,1,0,0,0,0)
 test_on_event = 'login'
 test_event_names = ['test_1_test_group','test_1_control_group']
 test_ratios = [[.35,.65],[.2,.8],[.18,.82]]
@@ -72,48 +72,47 @@ test_treatment_params = [test_start_date,test_end_date,test_on_event,test_event_
 ## From login event collection
 from_event = 'login'
 sequence_type = 'collection'
-event_list = ['home_page','view_company_page','view_contact','view_profile','view_settings']
-start_event_distribution = [.5,.2,.15,.1,.5]
-end_event_distribution = [.4,.3,.1,.1,.1]
-start_odds_to_continue = [.9,.7,.6]
-end_odds_to_continue = [.95,.8,.4]
-start_number_of_events = [8,5,2]
-end_number_of_events = [10,6,2]
+event_list = ['send_message','like_message','upload_picture']
+start_event_distribution = [.3,.5,.2]
+end_event_distribution = [.4,.5,.1]
+start_odds_to_continue = [.5,.2,.1]
+end_odds_to_continue = [.4,.3,.2]
+start_number_of_events = [3,2,1]
+end_number_of_events = [3,2,1]
 
 event_params_from_login = [start,end,from_event,sequence_type,event_list,start_event_distribution,end_event_distribution,start_odds_to_continue,
     end_odds_to_continue,start_number_of_events,end_number_of_events]
 
 ## From view company event funnel
-from_event = 'view_company_page'
-sequence_type = 'funnel'
-event_list = ['click_create_company','enter_company_info','confirm_company_creation','share_company_creation']
-start_event_distribution = [1,.5,.9,.3]
-end_event_distribution = [1,.3,1,.5]
-start_odds_to_continue = [.5,.2,.1]
-end_odds_to_continue = [.5,.2,.1]
-start_number_of_events = [8,5,2]
-end_number_of_events = [10,6,2]
-
-event_params_from_view_company = [start,end,from_event,sequence_type,event_list,start_event_distribution,end_event_distribution,start_odds_to_continue,
-    end_odds_to_continue,start_number_of_events,end_number_of_events]
+# from_event = 'view_company_page'
+# sequence_type = 'funnel'
+# event_list = ['click_create_company','enter_company_info','confirm_company_creation','share_company_creation']
+# start_event_distribution = [1,.5,.9,.3]
+# end_event_distribution = [1,.3,1,.5]
+# start_odds_to_continue = [.5,.2,.1]
+# end_odds_to_continue = [.5,.2,.1]
+# start_number_of_events = [8,5,2]
+# end_number_of_events = [10,6,2]
+# 
+# event_params_from_view_company = [start,end,from_event,sequence_type,event_list,start_event_distribution,end_event_distribution,start_odds_to_continue,
+#     end_odds_to_continue,start_number_of_events,end_number_of_events]
 
 
 ## MAKE DATA
 user_table = gu.generate_user_table(users,start,end,monthly_growth,weekend_signup_ratio)
-
 signup_events = gse.generate_signup_events(user_table,signup_event_list,start,end,starting_flow,ending_flow,step_time,weekend_signup_flow_ratio)
 login_events = gle.generate_login_events(signup_events[0],signup_event_list,start_user_dist,end_user_dist,starts_odds_of_returning,
     end_odds_of_returning,start,end,start_days_to_return,end_days_to_return,weekend_login_ratio)
 
 events = login_events
 events = gae.generate_arbitrary_events(events,event_params_from_login)
-events = gae.generate_arbitrary_events(events,event_params_from_view_company)
+# events = gae.generate_arbitrary_events(events,event_params_from_view_company)
 events = gtt.generate_test_treaments(events,test_treatment_params)
 
 user_table = signup_events[1]
 
 # billing_table = gb.generate_billing_table(user_table,company_dist,start_monetize_rate,end_monetize_rate,start_churn_rate,end_churn_rate,
-    # contract_length,contract_range,start,end)
+#     contract_length,contract_range,start,end)
 
 event_table = events
 

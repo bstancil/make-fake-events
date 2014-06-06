@@ -82,7 +82,7 @@ def check_to_continue(occurred_at,end_date,user_type,current_odds_of_return,mult
         go_on = False
     else:
         odds_of_returning = current_odds_of_return[user_type - 1]
-        adj_odds_of_returning = odds_of_returning * multiple
+        adj_odds_of_returning = min(odds_of_returning * multiple,.99)
         
         random_assignment = random.random()
         
